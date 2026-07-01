@@ -11,12 +11,12 @@ phases:
     commands:
       - echo "Installing frontend dependencies"
       - cd frontend
-      - npm ci
+      - npm install
       - cd ..
 
       - echo "Installing backend dependencies"
       - cd backend
-      - npm ci
+      - npm install
       - cd ..
 
   build:
@@ -35,4 +35,3 @@ phases:
 artifacts:
   files:
     - '**/*'
-    
