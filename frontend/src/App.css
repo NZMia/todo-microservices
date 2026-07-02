@@ -1,0 +1,28 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f8;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  width: 420px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.subtitle {
+  color: #555;
+}
+
+li {
+  margin: 10px 0;
+}
