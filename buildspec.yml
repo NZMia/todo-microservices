@@ -16,7 +16,8 @@ phases:
 
       - echo "Installing backend dependencies"
       - cd backend
-      - npm install
+      - npm install --include=dev
+      - npm ls typescript
       - cd ..
 
   build:
