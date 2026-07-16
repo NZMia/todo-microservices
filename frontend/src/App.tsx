@@ -17,7 +17,7 @@ function App() {
     <main className="app">
       <section className="card">
         <h1>To-Do List Application</h1>
-        <h2>Version 1.0</h2>
+        <h2>Version 2.0 - New Feature Deployed</h2>
         <p className="subtitle">Frontend service running in React + TypeScript</p>
 
         <ul>
