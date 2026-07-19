@@ -33,6 +33,19 @@ phases:
       - npm run build
       - cd ..
 
+  post_build:
+    commands:
+      - echo "Preparing SSH key for deployment"
+      - aws ssm get-parameter --name "/mia-todo/ec2-ssh-key" --with-decryption --query "Parameter.Value" --output text > /tmp/deploy_key.pem
+      - chmod 400 /tmp/deploy_key.pem
+
+      - echo "Deploying frontend build to Blue EC2 instance"
+      - ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key.pem ec2-user@3.25.252.51 "cd ~/todo-microservices/frontend && git pull && npm install && npm run build && pm2 restart todo-frontend-blue"
+
+      - echo "Cleaning up SSH key"
+      - rm -f /tmp/deploy_key.pem
+
 artifacts:
   files:
     - '**/*'
+    
