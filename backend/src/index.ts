@@ -17,8 +17,12 @@ app.get("/", (req, res) => {
   res.send("Backend service is running");
 });
 
-app.get("/todos", (req, res) => {
+app.get("/api/todos", (req, res) => {
   res.json(todos);
+});
+
+app.get('/api/simulate-error', (req, res) => {
+  res.status(500).json({ error: 'Simulated internal server error for monitoring demo' });
 });
 
 app.listen(port, () => {
