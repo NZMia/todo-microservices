@@ -1,4 +1,5 @@
 import React from "react";
+import { nonExistentFunction } from './utils/doesNotExist';
 import "./App.css";
 
 type Todo = {

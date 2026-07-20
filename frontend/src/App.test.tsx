@@ -23,6 +23,6 @@ describe("App", () => {
 
     expect(screen.getByText(/create frontend dockerfile/i)).toBeInTheDocument();
     expect(screen.getByText(/create backend api/i)).toBeInTheDocument();
-    expect(screen.getByText(/deploy services to azure/i)).toBeInTheDocument();
+    expect(screen.getByText(/deploy services to aws ecs/i)).toBeInTheDocument();
   });
 });
