@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_TAG: latest
+
+phases:
+  install:
+    commands:
+      - echo "Checking Node and Docker versions"
+      - node -v
+      - docker --version
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR"
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URL
+      - echo "Installing backend dependencies"
+      - cd backend
+      - npm install --include=dev
+      - npm ls typescript
+
+  build:
+    commands:
+      - echo "Building backend"
+      - npm run build
+      - echo "Building backend Docker image"
+      - docker build -t $ECR_REPOSITORY_URL:$IMAGE_TAG .
+      - cd ..
+
+  post_build:
+    commands:
+      - echo "Pushing backend image to ECR"
+      - docker push $ECR_REPOSITORY_URL:$IMAGE_TAG
+      - echo "Writing image definitions file for CodeDeploy"
+      - printf '[{"name":"service-b","imageUri":"%s"}]' $ECR_REPOSITORY_URL:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
