@@ -31,9 +31,45 @@ phases:
     commands:
       - echo "Pushing frontend image to ECR"
       - docker push $ECR_REPOSITORY_URL:$IMAGE_TAG
-      - echo "Writing image definitions file for CodeDeploy"
+      - echo "Writing imagedefinitions.json"
       - printf '[{"name":"service-a","imageUri":"%s"}]' $ECR_REPOSITORY_URL:$IMAGE_TAG > imagedefinitions.json
+      - echo "Writing taskdef.json for CodeDeploy"
+      - |
+        cat > taskdef.json << EOF
+        {
+          "family": "dce04-service-a",
+          "networkMode": "awsvpc",
+          "requiresCompatibilities": ["FARGATE"],
+          "cpu": "256",
+          "memory": "512",
+          "executionRoleArn": "$ECS_TASK_EXECUTION_ROLE_ARN",
+          "containerDefinitions": [
+            {
+              "name": "service-a",
+              "image": "$ECR_REPOSITORY_URL:$IMAGE_TAG",
+              "essential": true,
+              "portMappings": [{ "containerPort": 5050, "protocol": "tcp" }]
+            }
+          ]
+        }
+        EOF
+      - echo "Writing appspec.yml for CodeDeploy"
+      - |
+        cat > appspec.yml << EOF
+        version: 0.0
+        Resources:
+          - TargetService:
+              Type: AWS::ECS::Service
+              Properties:
+                TaskDefinition: <TASK_DEFINITION>
+                LoadBalancerInfo:
+                  ContainerName: "service-a"
+                  ContainerPort: 5050
+        EOF
 
 artifacts:
   files:
     - imagedefinitions.json
+    - taskdef.json
+    - appspec.yml
+    
